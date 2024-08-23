@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2c3e50;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .calculator {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            background: #34495e;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .display {
+            background: #1e272e;
+            color: #ecf0f1;
+            font-size: 2em;
+            padding: 20px;
+            text-align: right;
+            border-bottom: 1px solid #1e272e;
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .btn {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border: 1px solid #34495e;
+            font-size: 1.5em;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #34495e;
+        }
+
+        .btn:active {
+            background: #1e272e;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn" id="clear">C</button>
+            <button class="btn" id="divide">/</button>
+            <button class="btn" id="multiply">*</button>
+            <button class="btn" id="subtract">-</button>
+            <button class="btn" id="add">+</button>
+            <button class="btn" id="equals">=</button>
+            <button class="btn" id="decimal">.</button>
+            <button class="btn" id="0">0</button>
+            <button class="btn" id="1">1</button>
+            <button class="btn" id="2">2</button>
+            <button class="btn" id="3">3</button>
+            <button class="btn" id="4">4</button>
+            <button class="btn" id="5">5</button>
+            <button class="btn" id="6">6</button>
+            <button class="btn" id="7">7</button>
+            <button class="btn" id="8">8</button>
+            <button class="btn" id="9">9</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const display = document.getElementById('display');
+            let currentInput = '';
+            let operator = '';
+            let operand1 = null;
+            let operand2 = null;
+
+            const updateDisplay = (value) => {
+                display.textContent = value;
+            };
+
+            const calculate = () => {
+                if (operand1 === null || operator === '' || currentInput === '') return;
+                operand2 = parseFloat(currentInput);
+                let result;
+                switch (operator) {
+                    case '+':
+                        result = operand1 + operand2;
+                        break;
+                    case '-':
+                        result = operand1 - operand2;
+                        break;
+                    case '*':
+                        result = operand1 * operand2;
+                        break;
+                    case '/':
+                        result = operand1 / operand2;
+                        break;
+                    default:
+                        return;
+                }
+                updateDisplay(result);
+                operand1 = result;
+                operator = '';
+                currentInput = '';
+            };
+
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.textContent;
+
+                    if (value === 'C') {
+                        currentInput = '';
+                        operator = '';
+                        operand1 = null;
+                        updateDisplay('0');
+                    } else if (['+', '-', '*', '/'].includes(value)) {
+                        if (currentInput === '') return;
+                        operand1 = parseFloat(currentInput);
+                        operator = value;
+                        currentInput = '';
+                    } else if (value === '=') {
+                        calculate();
+                    } else if (value === '.') {
+                        if (!currentInput.includes('.')) {
+                            currentInput += '.';
+                            updateDisplay(currentInput);
+                        }
+                    } else {
+                        currentInput += value;
+                        updateDisplay(currentInput);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
